@@ -43,6 +43,20 @@ make pattern-catalog-push
 
 The image is published to `quay.io/validatedpatterns/patterns-operator-pattern-catalog`.
 
+## CI/CD
+
+A GitHub Actions workflow (`.github/workflows/build-and-push.yml`) runs on pushes to `main` and `stable-v1`:
+
+1. **validate-yaml** -- validates all YAML files under `catalog/` with `yamllint`
+2. **build-and-push** -- builds the container image, pushes it to Quay, and signs it with cosign
+
+| Branch      | Image tag     |
+|-------------|---------------|
+| `main`      | `:latest`     |
+| `stable-v1` | `:stable-v1`  |
+
+The workflow requires `QUAY_USERNAME` and `QUAY_PASSWORD` repository secrets.
+
 ## Repository structure
 
 ```
@@ -50,6 +64,7 @@ catalog/                  # Generated catalog data (served by nginx)
   catalog.yaml            # Index of all patterns
   <pattern>/pattern.yaml  # Normalized metadata per pattern
   <pattern>/values-secret.yaml.template  # Secret template (if available)
+.github/workflows/        # CI/CD workflow
 templates/                # Dockerfile template
 generate-catalog.sh       # Catalog generation script
 list-all-patterns.sh      # Lists all pattern repos

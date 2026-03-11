@@ -1,0 +1,81 @@
+name: Build and push pattern catalog to Quay
+
+on:
+  push:
+    branches: ["main", "stable-v1"]
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  REGISTRY: localhost
+  UPLOADREGISTRY: quay.io/validatedpatterns
+  NAME: patterns-operator-pattern-catalog
+  TAG: ${{ github.ref_name == 'main' && 'latest' || github.ref_name }}
+
+jobs:
+  validate-yaml:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
+
+      - name: Validate catalog YAML files
+        run: |
+          pip install yamllint
+          yamllint -s catalog/
+
+  build-and-push:
+    needs: [validate-yaml]
+    if: github.repository == 'validatedpatterns/pattern-catalog'
+    runs-on: ubuntu-latest
+    environment: quay
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
+
+      - name: Build container image
+        env:
+          CONTAINER: ${{ env.NAME }}:${{ env.TAG }}
+        run: |
+          make generate-dockerfile
+          buildah build -f pattern-catalog.Dockerfile -t "${REGISTRY}/${CONTAINER}" .
+
+      - name: Log into Quay
+        env:
+          USERNAME: ${{ secrets.QUAY_USERNAME }}
+          PASSWORD: ${{ secrets.QUAY_PASSWORD }}
+        run: |
+          buildah login -u "${USERNAME}" -p "${PASSWORD}" quay.io
+
+      - name: Push to Quay
+        id: push
+        env:
+          CONTAINER: ${{ env.NAME }}:${{ env.TAG }}
+        run: |
+          buildah push "${REGISTRY}/${CONTAINER}" "docker://${UPLOADREGISTRY}/${CONTAINER}"
+          DIGEST=$(skopeo inspect --format "{{.Digest}}" "docker://${UPLOADREGISTRY}/${CONTAINER}")
+          echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@faadad0cce49287aee09b3a48701e75088a2c6ad # v4.0.0
+        with:
+          cosign-release: "v2.2.4"
+
+      - name: Sign the published image
+        env:
+          CONTAINER: ${{ env.NAME }}:${{ env.TAG }}
+          DIGEST: ${{ steps.push.outputs.digest }}
+        run: |
+          cat "${XDG_RUNTIME_DIR}/containers/auth.json" > ~/.docker/config.json
+          cosign sign --yes "${UPLOADREGISTRY}/${CONTAINER}@${DIGEST}"
