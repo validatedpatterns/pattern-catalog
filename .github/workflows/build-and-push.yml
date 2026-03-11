@@ -3,6 +3,10 @@ name: Build and push pattern catalog to Quay
 on:
   push:
     branches: ["main", "stable-v1"]
+    paths:
+      - "catalog/**"
+      - "templates/**"
+      - ".github/workflows/build-and-push.yml"
 
   workflow_dispatch:
 
