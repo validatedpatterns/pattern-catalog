@@ -23,7 +23,7 @@ generate-dockerfile: ## Generate Dockerfile from template
 	VERSION=$(VERSION) SUPPORTED_OCP_VERSIONS=$(SUPPORTED_OCP_VERSIONS) envsubst < templates/pattern-catalog.Dockerfile.template > $(PATTERN_CATALOG_DOCKERFILE)
 
 .PHONY: pattern-catalog-build
-pattern-catalog-build: generate-dockerfile-pattern-catalog ## Build the pattern catalog image
+pattern-catalog-build: generate-dockerfile## Build the pattern catalog image
 	@echo "Building pattern catalog image..."
 	@podman pull $(PATTERN_CATALOG_IMAGE_BASE):latest 2>/dev/null || true
 	podman build -f $(PATTERN_CATALOG_DOCKERFILE) -t ${PATTERN_CATALOG_IMAGE} .
