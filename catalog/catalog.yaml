@@ -1,0 +1,9 @@
+generated_at: "2026-03-11T13:06:20Z"
+generator_version: "1.0"
+patterns:
+  - ansible-edge-gitops
+  - industrial-edge
+  - medical-diagnosis
+  - multicloud-gitops
+  - rag-llm-gitops
+  - openshift-ai

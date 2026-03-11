@@ -1,0 +1,28 @@
+metadata_version: "2.0"
+name: ansible-edge-gitops
+pattern_version: "2.0"
+display_name: Ansible Edge GitOps
+repo_url: https://github.com/validatedpatterns/ansible-edge-gitops
+docs_repo_url: https://github.com/validatedpatterns/docs
+issues_url: https://github.com/validatedpatterns/ansible-edge-gitops/issues
+docs_url: https://validatedpatterns.io/patterns/ansible-edge-gitops/
+ci_url: https://validatedpatterns.io/ci/?pattern=aegitops
+tier: maintained
+owners:
+  - mhjacks
+requirements:
+  hub:
+    compute:
+      aws:
+        replicas: 3
+        type: m5.4xlarge
+    controlPlane:
+      aws:
+        replicas: 3
+        type: m5.metal
+extra_features:
+  hypershift_support: false
+  spoke_support: false
+external_requirements: null
+org: validatedpatterns
+spoke: null
