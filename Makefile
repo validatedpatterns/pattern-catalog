@@ -1,13 +1,10 @@
 VERSION ?= 0.0.4
 SUPPORTED_OCP_VERSIONS ?= v4.20-v4.21
-OPERATOR_NAME ?= patterns
 REGISTRY ?= localhost
 UPLOADREGISTRY ?= quay.io/validatedpatterns
 
-IMAGE_TAG_BASE ?= $(UPLOADREGISTRY)/$(OPERATOR_NAME)-operator
-
 # Image base URL of the pattern catalog
-PATTERN_CATALOG_IMAGE_BASE ?= $(IMAGE_TAG_BASE)-pattern-catalog
+PATTERN_CATALOG_IMAGE_BASE ?= $(UPLOADREGISTRY)/pattern-catalog
 PATTERN_CATALOG_IMAGE ?= $(PATTERN_CATALOG_IMAGE_BASE):$(VERSION)
 PATTERN_CATALOG_DOCKERFILE ?= pattern-catalog.Dockerfile
 
