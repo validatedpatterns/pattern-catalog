@@ -50,6 +50,7 @@ jobs:
 
       - name: Build container image
         env:
+          GH_TOKEN: ${{ github.token }}
           CONTAINER: ${{ env.NAME }}:${{ env.TAG }}
         run: |
           make generate-dockerfile
