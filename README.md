@@ -24,8 +24,15 @@ The resulting `catalog/` directory is served by an nginx container image that th
 
 ### Regenerate the catalog
 
+The catalog data must be regenerated locally and committed before pushing.
+The CI pipeline does **not** run `generate-catalog.sh` — it only builds the
+container from whatever is already in `catalog/`.
+
 ```sh
-./generate-catalog.sh
+make generate-catalog   # or ./generate-catalog.sh directly
+git add catalog/
+git commit -m "Update catalog"
+git push origin main    # or stable-v1
 ```
 
 ### List all pattern repositories
@@ -34,28 +41,29 @@ The resulting `catalog/` directory is served by an nginx container image that th
 ./list-all-patterns.sh
 ```
 
-### Build and push the container image
+### Build and push the container image locally
 
 ```sh
 make pattern-catalog-build
 make pattern-catalog-push
 ```
 
-The image is published to `quay.io/validatedpatterns/patterns-operator-pattern-catalog`.
-
 ## CI/CD
 
-A GitHub Actions workflow (`.github/workflows/build-and-push.yml`) runs on pushes to `main` and `stable-v1`:
+A GitHub Actions workflow (`.github/workflows/build-and-push.yml`) triggers on
+pushes to `main` or `stable-v1` when files in `catalog/`, `templates/`, or the
+workflow itself change:
 
-1. **validate-yaml** -- validates all YAML files under `catalog/` with `yamllint`
-2. **build-and-push** -- builds the container image, pushes it to Quay, and signs it with cosign
+1. **validate-yaml** — validates all YAML files under `catalog/` with `yamllint`
+2. **build-container** — builds the image for amd64 and arm64 in parallel on native runners
+3. **push-multiarch-manifest** — assembles a multi-arch manifest, pushes to Quay, and signs with cosign (only in the upstream `validatedpatterns/pattern-catalog` repo)
 
 | Branch      | Image tag     |
 |-------------|---------------|
 | `main`      | `:latest`     |
 | `stable-v1` | `:stable-v1`  |
 
-The workflow requires `QUAY_USERNAME` and `QUAY_PASSWORD` repository secrets.
+The workflow requires `QUAY_USERNAME` and `QUAY_PASSWORD` secrets configured in a `quay` environment.
 
 ## Repository structure
 

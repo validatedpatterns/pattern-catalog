@@ -54,7 +54,6 @@ jobs:
 
       - name: Generate Dockerfile and build container
         env:
-          GH_TOKEN: ${{ github.token }}
           CONTAINER: ${{ env.NAME }}:${{ env.TAG }}
           TARGETARCH: ${{ matrix.targetarch }}
         run: |
