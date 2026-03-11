@@ -20,7 +20,7 @@ generate-catalog: ## Generates actual catalog yaml tree
 
 # Generate Dockerfile for pattern catalog using the template
 .PHONY: generate-dockerfile
-generate-dockerfile: generate-catalog ## Generate Dockerfile from template
+generate-dockerfile: ## Generate Dockerfile from template
 	VERSION=$(VERSION) SUPPORTED_OCP_VERSIONS=$(SUPPORTED_OCP_VERSIONS) envsubst < templates/pattern-catalog.Dockerfile.template > $(PATTERN_CATALOG_DOCKERFILE)
 
 .PHONY: pattern-catalog-build
