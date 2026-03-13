@@ -44,8 +44,8 @@ git push origin main    # or stable-v1
 ### Build and push the container image locally
 
 ```sh
-make pattern-catalog-build
-make pattern-catalog-push
+make pattern-ui-catalog-build
+make pattern-ui-catalog-push
 ```
 
 ## CI/CD
@@ -56,7 +56,7 @@ workflow itself change:
 
 1. **validate-yaml** — validates all YAML files under `catalog/` with `yamllint`
 2. **build-container** — builds the image for amd64 and arm64 in parallel on native runners
-3. **push-multiarch-manifest** — assembles a multi-arch manifest, pushes to Quay, and signs with cosign (only in the upstream `validatedpatterns/pattern-catalog` repo)
+3. **push-multiarch-manifest** — assembles a multi-arch manifest, pushes to Quay, and signs with cosign (only in the upstream `validatedpatterns/pattern-ui-catalog` repo)
 
 | Branch      | Image tag     |
 |-------------|---------------|

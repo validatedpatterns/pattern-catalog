@@ -15,7 +15,7 @@ permissions:
 
 env:
   REGISTRY: localhost
-  NAME: pattern-catalog
+  NAME: pattern-ui-catalog
   TAG: ${{ github.ref_name == 'main' && 'latest' || github.ref_name }}
 
 jobs:
@@ -58,7 +58,7 @@ jobs:
           TARGETARCH: ${{ matrix.targetarch }}
         run: |
           make generate-dockerfile
-          buildah build --platform "linux/${TARGETARCH}" -f pattern-catalog.Dockerfile -t "${CONTAINER}-${TARGETARCH}" .
+          buildah build --platform "linux/${TARGETARCH}" -f pattern-ui-catalog.Dockerfile -t "${CONTAINER}-${TARGETARCH}" .
           buildah push "${CONTAINER}-${TARGETARCH}" "docker-archive:/tmp/image-${TARGETARCH}.tar:${CONTAINER}-${TARGETARCH}"
 
       - name: Upload image artifact
@@ -70,7 +70,7 @@ jobs:
 
   push-multiarch-manifest:
     needs: [build-container]
-    if: github.repository == 'validatedpatterns/pattern-catalog'
+    if: github.repository == 'validatedpatterns/pattern-ui-catalog'
     runs-on: ubuntu-latest
     environment: quay
     permissions:

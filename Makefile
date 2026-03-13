@@ -4,9 +4,9 @@ REGISTRY ?= localhost
 UPLOADREGISTRY ?= quay.io/validatedpatterns
 
 # Image base URL of the pattern catalog
-PATTERN_CATALOG_IMAGE_BASE ?= $(UPLOADREGISTRY)/pattern-catalog
+PATTERN_CATALOG_IMAGE_BASE ?= $(UPLOADREGISTRY)/pattern-ui-catalog
 PATTERN_CATALOG_IMAGE ?= $(PATTERN_CATALOG_IMAGE_BASE):$(VERSION)
-PATTERN_CATALOG_DOCKERFILE ?= pattern-catalog.Dockerfile
+PATTERN_CATALOG_DOCKERFILE ?= pattern-ui-catalog.Dockerfile
 
 .PHONY: help
 help: ## Display this help.
@@ -21,15 +21,15 @@ generate-catalog: ## Generates actual catalog yaml tree
 # Generate Dockerfile for pattern catalog using the template
 .PHONY: generate-dockerfile
 generate-dockerfile: ## Generate Dockerfile from template
-	VERSION=$(VERSION) SUPPORTED_OCP_VERSIONS=$(SUPPORTED_OCP_VERSIONS) envsubst < templates/pattern-catalog.Dockerfile.template > $(PATTERN_CATALOG_DOCKERFILE)
+	VERSION=$(VERSION) SUPPORTED_OCP_VERSIONS=$(SUPPORTED_OCP_VERSIONS) envsubst < templates/pattern-ui-catalog.Dockerfile.template > $(PATTERN_CATALOG_DOCKERFILE)
 
-.PHONY: pattern-catalog-build
-pattern-catalog-build: generate-dockerfile## Build the pattern catalog image
+.PHONY: pattern-ui-catalog-build
+pattern-ui-catalog-build: generate-dockerfile## Build the pattern catalog image
 	@echo "Building pattern catalog image..."
 	@podman pull $(PATTERN_CATALOG_IMAGE_BASE):latest 2>/dev/null || true
 	podman build -f $(PATTERN_CATALOG_DOCKERFILE) -t ${PATTERN_CATALOG_IMAGE} .
 	podman tag ${PATTERN_CATALOG_IMAGE} $(PATTERN_CATALOG_IMAGE_BASE):latest
 
-.PHONY: pattern-catalog-push
-pattern-catalog-push: ## Push the pattern catalog image
+.PHONY: pattern-ui-catalog-push
+pattern-ui-catalog-push: ## Push the pattern catalog image
 	podman push $(PATTERN_CATALOG_IMAGE)

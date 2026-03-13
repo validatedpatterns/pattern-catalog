@@ -7,12 +7,12 @@ LABEL \
     io.k8s.description="" \
     io.openshift.tags="openshift,patterns" \
     distribution-scope="public" \
-    name="patterns-operator-pattern-catalog" \
+    name="patterns-operator-pattern-ui-catalog" \
     summary="Pattern Catalog" \
     release="v${VERSION}" \
     version="v${VERSION}" \
     maintainer="https://groups.google.com/g/validatedpatterns" \
-    url="https://github.com/validatedpatterns/pattern-catalog.git" \
+    url="https://github.com/validatedpatterns/pattern-ui-catalog.git" \
     vendor="Red Hat" \
     License="Apache License 2.0"
 
