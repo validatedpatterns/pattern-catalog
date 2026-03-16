@@ -120,9 +120,11 @@ for org in "${ORGS[@]}"; do
 done
 
 # Build catalog index
+CATALOG_DESCRIPTION=${CATALOG_DESCRIPTION:-'Additional patterns can be found here: <a href="https://validatedpatterns.io">validatedpatterns.io</a>'}
 {
     echo "generated_at: \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\""
     echo "generator_version: \"${GENERATOR_VERSION}\""
+    echo "catalog_description: '${CATALOG_DESCRIPTION}'"
     echo "patterns:"
     for name in "${pattern_names[@]}"; do
         echo "  - ${name}"
