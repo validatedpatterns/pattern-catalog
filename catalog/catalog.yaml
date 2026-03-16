@@ -1,5 +1,6 @@
 generated_at: "2026-03-13T15:39:18Z"
 generator_version: "1.0"
+catalog_description: 'Additional patterns can be found here: <a href="https://validatedpatterns.io">validatedpatterns.io</a>'
 patterns:
   - ansible-edge-gitops
   - industrial-edge
